@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/listrow_base" android:layout_width="fill_parent"
+	android:layout_height="88dip" android:padding="0px"
+	android:layout_margin="0px" android:background="#a90040ab">
+
+	<TextView android:id="@+id/listrow_url"
+		android:layout_marginLeft="3px" android:layout_width="fill_parent"
+		android:layout_alignParentTop="true" android:layout_height="wrap_content"
+		android:singleLine="true" android:visibility="gone" android:text=""
+		android:textSize="16px" android:textColor="#EFF0F0F0" />
+
+	<TextView android:id="@+id/listrow_titlen" android:visibility="visible"
+		android:layout_marginLeft="4px" android:paddingTop="1px"
+		android:layout_width="fill_parent"
+		android:layout_alignWithParentIfMissing="true" android:layout_below="@id/listrow_url"
+		android:textColor="#F0A0F0F0" android:layout_height="wrap_content"
+		android:textSize="12px" android:lines="2" android:text=""
+		android:ellipsize="middle" />
+
+	<TextView android:id="@+id/listrow_titledd"
+		android:visibility="gone" android:layout_width="fill_parent"
+		android:layout_marginLeft="3px" android:layout_below="@id/listrow_titlen"
+		android:textColor="#CF909090" android:layout_height="wrap_content"
+		android:textSize="12px" android:lines="1" android:text=""
+		android:ellipsize="middle" />
+
+	<TextView android:id="@+id/listrow_title" android:visibility="visible"
+		android:layout_marginLeft="3px" android:paddingTop="1px"
+		android:layout_width="fill_parent" android:layout_below="@id/listrow_titlen"
+		android:textColor="#F0F0F0F0" android:layout_height="wrap_content"
+		android:textSize="12px" android:lines="1" android:text=""
+		android:ellipsize="middle" />
+
+	<TextView android:id="@+id/listrow_status"
+		android:layout_width="wrap_content" android:layout_alignParentTop="true"
+		android:layout_height="wrap_content" android:singleLine="true"
+		android:visibility="gone" android:text="status" android:textSize="16px" />
+
+	<TextView android:id="@+id/listrow_images"
+		android:layout_width="wrap_content" android:layout_alignParentTop="true"
+		android:layout_height="wrap_content" android:singleLine="true"
+		android:visibility="gone" android:text="images list" android:textSize="16px" />
+
+	<TextView android:id="@+id/listrow_id"
+		android:layout_alignParentBottom="true" android:layout_marginRight="3px"
+		android:paddingTop="1px" android:gravity="right" android:layout_width="fill_parent"
+		android:textColor="#F0909090" android:layout_height="wrap_content"
+		android:textSize="18px" android:lines="1" android:text="" />
+
+
+
+</RelativeLayout>

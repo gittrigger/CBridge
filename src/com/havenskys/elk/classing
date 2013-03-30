@@ -1,0 +1,1019 @@
+
+
+	Handler crclimb = new Handler() {
+
+		boolean x = false;
+		boolean xc = x;
+		boolean xu = x;
+		boolean xj = x;
+		boolean xc2 = x;
+		boolean xc24 = x;
+		boolean xc4 = x;
+		boolean hx4 = false;
+		String ix = "";
+		String xpack = "";
+		int tbg = -1;
+		int lastt = -1;
+		String texttage = "";
+		String texttag = "";
+		int tbgc = 1;
+		int clm = -1;
+
+		public void handleMessage(Message msg) {
+			Bundle bdl = msg.getData();
+			final int mid = bdl.getInt("mid");
+			final int huid = bdl.getInt("huid");
+			final int scub = bdl.getInt("scub");
+			final boolean addx = bdl.getBoolean("addx");
+			boolean filter = bdl.getBoolean("filter");
+
+			xu = true;
+
+			for (int ih = cri; ih < cr.length; cri++, ih++) {
+
+				ix = cr[ih].trim();
+				if (ix.length() == 0) {
+					continue;
+				}
+
+				if (xu) {
+					lastt = -1;
+					xu = false;
+					x = false;
+					xc2 = false;
+					xc4 = false;
+					xj = false;
+					xc = false;
+
+					if (texttag.length() > 0) {
+						texttage = texttag;
+						texttag = "";
+						clm++;
+						if (clm > 8) {
+
+							clm = 0;
+							{
+								// cri++;
+								Message ml = new Message();
+								Bundle bl = new Bundle();
+								bl.putInt("mid", mid);
+								bl.putInt("huid", huid);
+								bl.putInt("scub", scub);
+								bl.putBoolean("addx", addx);
+								bl.putBoolean("filter", filter);
+								ml.setData(bl);
+								crclimb.sendMessageDelayed(ml, 25);
+
+							}
+
+							return;
+							// } else {
+							// continue;
+						}
+
+					}
+
+				}
+
+				if (xc4) {
+					if (ix.startsWith("</item>")) {
+
+						if (lastt > -1) {
+							TextView t7 = (TextView) findViewById(lastt);
+							if (t7 != null) {
+								String oh = t7.getText().toString();
+								if (!oh.startsWith("content://")) {
+
+									Message ml = new Message();
+									Bundle bl = new Bundle();
+									bl.putInt("mid", mid);
+									bl.putInt("lastt", lastt);
+									ml.setData(bl);
+									contentize.sendMessageDelayed(ml, 175);
+
+									filter = true;
+								}
+							}
+
+						}
+
+						xu = true;
+						// texttag = "";
+						continue;
+					}
+
+				} else {
+
+					if (ix.startsWith("<")) {
+						if (ix.matches("<(br|p|i|b|h[0-9])[> \\/].*")) {
+							continue;
+						}
+						if (ix.matches("<\\/(br|p|i|b|h[0-9])[> \\/].*")) {
+							continue;
+						}
+
+						// markup content
+						x = true;
+						if (!ix.endsWith(">")) {
+							xj = true;
+						}
+					} else {
+						if (!xj) {
+							lastt = -1;
+							x = false;
+						} else if (xj && ix.endsWith(">")) {
+							xu = true;
+						}
+					}
+
+					// if (texttag.length() > 0 && ix.startsWith("</" +
+					// texttag)) {
+					// texttage = texttag;
+					// texttag = "";
+					// xu = true;
+					// continue;
+					// }
+
+					if (texttage.length() > 0 && ix.startsWith("</" + texttage)) {
+						texttage = "";
+						// xu = true;
+						continue;
+					}
+
+					if (ix.startsWith("<!--")) {
+						xc = true;
+						if (!xc2) {
+							lastt = -1;
+						}
+					} else if (ix.endsWith("-->")) {
+						xc = false;
+					}
+					if (ix.regionMatches(true, 0, "<script", 0, 7)) {
+						xc2 = true;
+						lastt = -1;
+					}
+					if (xc2 && ix.regionMatches(true, 0, "</script", 0, 8)) {
+						xu = true;
+					}
+
+					if (ix.startsWith("<![")) {
+
+						ix = ix.replaceFirst("<!\\[CDATA\\[", "");
+						if (ix.endsWith("]]>")) {
+							ix = ix.replaceFirst("\\]\\]>", "");
+						} else {
+							xc24 = true;
+						}
+						xu = true;
+						cr[ih] = ix;
+						ih--;
+						// lastt = -1;
+						continue;
+					} // else if (ix.startsWith("<![") && scub == R.id.cubx) {
+						// lastt = -1;
+						//
+						// hx4 = true;
+						// xu = true;
+						// }
+
+					// xc24 &&
+					if (ix.endsWith("]]>")) {
+						ix = ix.replaceFirst("\\]\\]>", "");
+						xu = true;
+						xc24 = false;
+
+						cr[ih] = ix;
+						ih--;
+						continue;
+					}
+					// if (hx4 && ix.endsWith("]]>")) {
+					//
+					// hx4 = false;
+					// }
+
+					if (ix.regionMatches(true, 0, "<style", 0, 6)) {
+						xc2 = true;
+						lastt = -1;
+					}
+
+					if (xc2 && ix.regionMatches(true, 0, "</style", 0, 7)) {
+						xu = true;
+					}
+
+					// (hu.getId() != R.id.hux) &&
+					if (ix.startsWith("<item")) {
+						texttag = "item";
+						xc4 = true;
+						lastt = -1;
+						continue;
+					}
+
+				}
+
+				// Method of expanding Countable
+				/*
+				 * if (ix.regionMatches(true, 0, "</item", 0, 6)) { xu = true;
+				 * hu = (LinearLayout) findViewById(R.id.hu);
+				 * hu.setDrawingCacheEnabled(true);
+				 * hu.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+				 * 
+				 * continue; } if (ix.regionMatches(true, 0, "<item", 0, 5)) {
+				 * tbg = R.drawable.b3; lastt = -1; }
+				 */
+
+				/*
+				 * / if (tbg != -1) {
+				 * 
+				 * LinearLayout.LayoutParams t1r = new
+				 * LinearLayout.LayoutParams( -1, -2); TextView ti = new
+				 * TextView(mCtx); ti.setLayoutParams(t1r);
+				 * ti.setTextColor(Color.argb(255, 210, 215, 240));
+				 * ti.setGravity(Gravity.CENTER); ti.setTextSize(27);
+				 * ti.setText("" + tbgc++); ti.setBackgroundResource(tbg); tbg =
+				 * -1; LinearLayout mhu = (LinearLayout) findViewById(hu.getId()
+				 * == R.id.hux ? R.id.hux : R.id.hu); mhu.addView(ti);
+				 * 
+				 * // LinearLayout.LayoutParams x1 = new //
+				 * LinearLayout.LayoutParams( // -1, -2); LayoutParams xhuj =
+				 * new LinearLayout.LayoutParams(-1, -2); LinearLayout xhu = new
+				 * LinearLayout(mCtx); xhu.setLayoutParams(xhuj);
+				 * xhu.setOrientation(LinearLayout.VERTICAL); xhu.setId(hid++);
+				 * xhu.setVisibility(View.GONE); mhu.addView(xhu);
+				 * 
+				 * hu = xhu; hu.setDrawingCacheEnabled(true);
+				 * hu.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+				 * 
+				 * final int xid = xhu.getId();
+				 * 
+				 * ti.setOnClickListener(new OnClickListener() { boolean gu =
+				 * false;
+				 * 
+				 * public void onClick(View gb) { View gv = findViewById(xid);
+				 * if (!gu) { gv.setVisibility(View.VISIBLE); gu = true; } else
+				 * { gu = false; gv.setVisibility(View.GONE); } } });
+				 * 
+				 * xu = true; continue; }//
+				 */
+
+				TextView t1;
+
+				final boolean x6 = xc4 ? xc4 : false;// : (ix.contains("&gt;")
+														// && ix
+				// .contains("&lt;"));
+
+				if (x || xc || xc2 || xc4 || xj) {
+
+					if (lastt == -1) {
+						t1 = new TextView(mCtx);
+						LinearLayout.LayoutParams t1r = new LinearLayout.LayoutParams(
+								-1, (huid == R.id.hu ? 88 : 88));
+						// t1r.setMargins(2, 5, 2, 5);
+						t1.setLayoutParams(t1r);
+						lastt = hid++;
+						t1.setId(lastt);
+						t1.setClickable(true);
+						t1.setTextSize((float) 14);
+
+						if (x6) {
+							t1.setBackgroundResource(R.drawable.b7);
+							t1.setTextColor(Color.argb(250, 195, 179, 138));
+						} else if (xc4) {
+							t1.setBackgroundResource(R.drawable.b7);
+							t1.setTextColor(Color.argb(250, 195, 179, 38));
+						} else {
+							t1.setBackgroundResource(R.drawable.b6);
+							t1.setTextColor(Color.argb(250, 161, 234, 255));
+						}
+						// t1.setBackgroundColor(Color.argb(240, 20, 20, 50));
+						t1.setGravity(Gravity.LEFT);
+
+						t1.setText(ix);
+
+						LinearLayout hu = (LinearLayout) findViewById(huid);
+						hu.addView(t1);
+
+					} else {
+
+						t1 = (TextView) findViewById(lastt);
+						if (t1 != null) {
+							t1.append("\n" + ix);
+							continue;
+						}
+					}
+				} else
+
+				{
+
+					try {
+
+						Charset charset = Charset.forName("ISO-8859-1");
+						CharsetDecoder decoder = charset.newDecoder();
+						ByteBuffer b3 = ByteBuffer.wrap(ix.getBytes());
+						CharBuffer c3;
+						c3 = decoder.decode(b3);
+						ix = c3.toString();
+						ix = ix.replaceAll("&amp;", "&").replaceAll("&nbsp;",
+								" ");
+						ix = ix.replaceAll("&quot;", "\"")
+								.replaceAll("&apos;", "'")
+								.replaceAll("&ndash;", "-")
+								.replaceAll("&ntilde;", "`")
+								.replaceAll("&rsquo;", "'")
+								.replaceAll("&#39;", "'")
+								.replaceAll("&lt;", "<")
+								.replaceAll("&gt;", ">");
+					} catch (CharacterCodingException e) {
+						e.printStackTrace();
+					}
+
+					t1 = new TextView(mCtx);
+					// LinearLayout.LayoutParams t1r = new
+					// LinearLayout.LayoutParams(
+					// -1, -2);
+					// t1r.setMargins(2, 5, 2, 5);
+
+					if (ix.matches(".*?%[0-9A-F][0-9A-F].*")) {
+						ix = Uri.decode(ix);
+					}
+					t1.setText(ix);
+
+					if (x6) {
+						t1.setLayoutParams(new LinearLayout.LayoutParams(-1, 88));
+						t1.setBackgroundResource(R.drawable.b7);
+					} else {
+						t1.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+						cntn++;
+
+						if (cntn == 1) {
+
+							if (filter) {
+
+								{
+									Message ml = new Message();
+									Bundle bl = new Bundle();
+									bl.putInt("mid", mid);
+									bl.putString("titlen", ix);
+									ml.setData(bl);
+									settitlen.sendMessageDelayed(ml, 75);
+								}
+							}
+							t1.setTextSize((float) 21);
+							t1.setBackgroundResource(R.drawable.b8);
+							t1.setGravity(Gravity.CENTER);
+						} else {
+							t1.setTextSize((float) 16);
+							t1.setBackgroundResource(R.drawable.b5);
+							t1.setGravity(Gravity.LEFT);
+						}
+					}
+					t1.setClickable(true);
+					t1.setId(hid++);
+					// t1.setBackgroundColor(Color.argb(240, 20, 20,
+					// 30));
+
+					t1.setTextColor(Color.argb(255, 0, 140, 255));
+
+					LinearLayout hu = (LinearLayout) findViewById(huid);
+					hu.addView(t1);
+					lastt = -1;
+					xu = true;
+					if (cntn == 1) {
+						Message ml = new Message();
+						Bundle bl = new Bundle();
+						bl.putInt("id", t1.getId());
+						bl.putInt("scub", scub);
+						ml.setData(bl);
+						lmt.sendMessageDelayed(ml, 175);
+
+					}
+
+				}
+
+				try {
+					TextView uk = (TextView) findViewById(hid - 2);
+					if (uk != null) {
+
+						if (texttag.length() == 0) {
+							String ut = uk.getText().toString();
+							String[] ut8 = ut.split("\n");
+							String ut7 = "";
+							for (int b = 0; b < ut8.length - 1; b++) {
+								ut7 += ut8[b] + "\n";
+							}
+
+							String ut2 = ut8[ut8.length - 1];
+							if (ut2.startsWith("<") && !ut2.startsWith("<![")
+									&& !ut2.startsWith("</")) {
+								ut7 = ut7.trim();
+							} else {
+								ut7 += ut2;
+								ut2 = "";
+							}
+							uk.setText(ut7);
+							ut2 = ut2.replaceFirst("<", "");
+							ut2 = ut2.replaceAll("[ >].*", "");
+							texttag = ut2;
+							if (ut7.length() == 0) {
+								uk.setVisibility(View.GONE);
+							}
+
+						}
+
+					}
+				} catch (ClassCastException ey) {
+					ey.printStackTrace();
+				}
+
+				{
+					if (t1 != null) {
+						t1.setTag(texttag);
+
+						final String fut2 = texttag;
+
+						/*
+						 * t1.setOnTouchListener(new OnTouchListener() {
+						 * 
+						 * int act = -1; float xx = -1; float x4 = -1;
+						 * 
+						 * public boolean onTouch(View g, MotionEvent u) {
+						 * 
+						 * act = u.getAction(); xx = u.getX(); x4 = u.getRawY();
+						 * if (act == MotionEvent.ACTION_DOWN) {
+						 * chbon.sendEmptyMessageDelayed(1, 1000); } else if
+						 * (act == MotionEvent.ACTION_UP) {
+						 * chboff.sendEmptyMessage(1); if (u.getX() < mWidth /
+						 * 3) { cvbback.sendEmptyMessage(huid); return true; } }
+						 * else if (act == MotionEvent.ACTION_CANCEL) {
+						 * chboff.sendEmptyMessage(1); } else if (act ==
+						 * MotionEvent.ACTION_MOVE) {
+						 * chbon.sendEmptyMessageDelayed(1, 800); }
+						 * 
+						 * { Message ml = new Message(); Bundle bl = new
+						 * Bundle(); bl.putInt("tv", g.getId());
+						 * bl.putFloat("xx", xx); bl.putFloat("x4", x4);
+						 * ml.setData(bl); chbex.sendMessage(ml); }
+						 * 
+						 * return false; } });
+						 */
+
+						t1.setOnClickListener(new OnClickListener() {
+
+							boolean xn = true;
+
+							public void onClick(View gv) {
+
+								TextView gt = (TextView) gv;
+
+								if (x6) {
+									mie(gt.getText().toString(), mid, R.id.hux,
+											R.id.cubx, true, false);
+								} else {
+
+									if (xn) {
+										xn = false;
+										{
+											gv.setLayoutParams(new LinearLayout.LayoutParams(
+													-1, -2));
+										}
+									} else {
+
+										xn = true;
+										// gv.setLayoutParams(new
+										// LinearLayout.LayoutParams(
+										// -1, 88));
+									}
+									if (fut2.length() > 0) {
+										// Toast.makeText(mCtx, fut2,
+										// 5000).show();
+										setr(fut2);
+									}
+								}
+							}
+						});
+
+					}
+
+				}
+
+				// t1.setPadding(7, 13, 7, 13);
+
+			}
+
+			if (filter) {
+
+				// filtered
+
+				Message ml = new Message();
+				Bundle bl = new Bundle();
+				bl.putInt("mid", mid);
+				bl.putInt("huid", huid);
+				ml.setData(bl);
+
+				miesrx.sendMessageDelayed(ml, 715);
+
+			}
+
+			{
+				LinearLayout ux = (LinearLayout) findViewById(huid);
+				TextView u8 = (TextView) ux.getChildAt(ux.getChildCount() - 1);
+				// if (u8.getBackground().equals(
+				// getResources().getDrawable(R.drawable.b5))) {
+				u8.setBackgroundResource(R.drawable.b9);
+				// }
+
+			}
+
+		}
+	};
+
+	Handler contentize = new Handler() {
+		public void handleMessage(Message msg) {
+			Bundle bdl = msg.getData();
+
+			int lastt = bdl.getInt("lastt");
+			int mid = bdl.getInt("mid");
+			TextView t7 = (TextView) findViewById(lastt);
+			if (t7 != null) {
+				String oh = t7.getText().toString();
+				if (oh.startsWith("content://")) {
+					return;
+				}
+				ContentValues i9 = new ContentValues();
+				i9.put("content", oh);
+				i9.put("title", Uri.encode(oh.replaceAll("<.*?>", ""), " ")
+						.replaceAll("%..", "").replaceAll("[-()' +]", "")
+						.trim());
+				i9.put("status", mid * -1);
+
+				Cursor u9 = null;
+				u9 = SqliteWrapper.query(mCtx, getContentResolver(),
+						Uri.parse("content://com.havenskys.elk/moment"),
+						new String[] { "_id" },
+						"status < 0 AND title = '" + i9.getAsString("title")
+								+ "'", null, null);
+				boolean n = true;
+				if (u9 != null) {
+					if (u9.moveToFirst()) {
+						t7.setText("content://com.havenskys.elk/moment/"
+								+ u9.getInt(0));
+						n = false;
+					}
+					u9.close();
+				}
+
+				if (n) {
+					Uri h4 = SqliteWrapper
+							.insert(mCtx,
+									mCtx.getContentResolver(),
+									Uri.parse("content://com.havenskys.elk/moment"),
+									i9);
+					t7.setText(h4.toString());
+					t7.setTextSize(21);
+
+				}
+			}
+
+		}
+	};
+
+	Handler settitlen = new Handler() {
+		public void handleMessage(Message msg) {
+			Bundle bdl = msg.getData();
+			int mid = bdl.getInt("mid");
+			String ix = bdl.getString("titlen");
+			ContentValues hx = new ContentValues();
+			hx.put("foundtitle", ix);
+
+			SqliteWrapper.update(mCtx, mCtx.getContentResolver(),
+					Uri.parse("content://com.havenskys.elk/moment"), hx, "_id="
+							+ mid + "", null);
+		}
+	};
+
+	int cntn = -1;
+	int cri = -1;
+	String[] cr;
+
+	public void mie(String rcontent, final int mid, final int huid,
+			final int scub, final boolean addx, final boolean filter) {
+
+		if (rcontent.startsWith("<![")) {
+			rcontent = rcontent.replaceFirst("<!\\[CDATA\\[", "").replaceFirst(
+					"\\]\\]>", "");
+		} else if (rcontent.startsWith("<item")) {
+			rcontent = rcontent.replaceFirst("<item.*?>", "").replaceFirst(
+					"</item>", "");
+		}
+		if (!rcontent.contains("\n")) {
+			rcontent = ":)" + "\n" + rcontent;
+		}
+
+		cntn = 0;
+		cri = 0;
+		cr = rcontent.split("\n");
+
+		LinearLayout hu = (LinearLayout) findViewById(huid);
+		hu.removeAllViews();
+		// hu.setVisibility(View.VISIBLE);
+		hu.requestFocus();
+
+		ScrollView cubx = (ScrollView) findViewById(scub);
+		cubx.scrollTo(0, 0);
+		cubx.setDrawingCacheEnabled(true);
+		cubx.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+		cubx.postInvalidateDelayed(15);
+		RelativeLayout.LayoutParams c98 = (RelativeLayout.LayoutParams) cubx
+				.getLayoutParams();
+		// if (mWidth > getListView().getWidth()) {
+		c98.setMargins(89, 55, 0, 0);
+		// } else {
+		// c98.setMargins(0, 0, 0, 0);
+		// }
+		cubx.setLayoutParams(c98);
+
+		// getListView().setLayoutParams
+		RelativeLayout.LayoutParams hn = new RelativeLayout.LayoutParams(88, -1);
+		getListView().setLayoutParams(hn);
+
+		// hn.setMargins(88, 88, (int) (mWidth / 3 > 240 ? 240 : mWidth /
+		// 3),
+		// (int) ((mHeight - 100) / 3));
+
+		// huxb.sendEmptyMessageDelayed(2, 75);
+		// if (huid != R.id.hux) {
+		// bucxb.setVisibility(View.GONE);
+		// }
+
+		// o1show.sendEmptyMessageDelayed(2, 275);
+		cvbon.sendEmptyMessageDelayed(huid, 345);
+		{
+			Message ml = new Message();
+			Bundle bl = new Bundle();
+			bl.putInt("mid", mid);
+			bl.putInt("huid", huid);
+			bl.putInt("scub", scub);
+			bl.putBoolean("addx", addx);
+			bl.putBoolean("filter", filter);
+			ml.setData(bl);
+			crclimb.sendMessageDelayed(ml, 25);
+		}
+
+		if (addx) {
+			addx(rcontent, mid, scub);
+
+		}
+
+	}
+
+	int cdi = 0;
+
+	public void addx(String rcontent, int mid, int huid) {
+
+		ContentValues cx = new ContentValues();
+		cx.put("content", rcontent);
+		cx.put("mid", mid);
+		Uri xuri = SqliteWrapper.insert(mCtx, mCtx.getContentResolver(),
+				Uri.parse("content://com.havenskys.elk/xsaw"), cx);
+		int xid = xuri.getLastPathSegment().matches("[0-9]+") ? Integer
+				.parseInt(xuri.getLastPathSegment()) : -1;
+		Log.i(G, "Created " + xid + " " + xuri.toString());
+
+		Message ml = new Message();
+		Bundle bl = new Bundle();
+		bl.putInt("xid", xid);
+		bl.putInt("huid", huid);
+		bl.putInt("mid", mid);
+		ml.setData(bl);
+		getimage.sendMessageDelayed(ml, 750);
+
+	}
+
+	Handler getimage = new Handler() {
+		public void handleMessage(Message msg) {
+			Bundle bdl = msg.getData();
+			int xid = bdl.getInt("xid");
+			int huid = bdl.getInt("huid");
+			int mid = bdl.getInt("mid");
+
+			// if (huid == R.id.cub) {
+			// buc.setVisibility(View.VISIBLE);
+			// bucx.setVisibility(View.VISIBLE);
+			// } else if (huid == R.id.cubx) {
+			// buc.setVisibility(View.VISIBLE);
+			// bucx.setVisibility(View.GONE);
+			// }
+
+			// LinearLayout hu = (LinearLayout) findViewById(huid);
+			ScrollView hu = (ScrollView) findViewById(huid);
+			hu.setDrawingCacheEnabled(true);
+			hu.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+			hu.postInvalidate();
+
+			// Bitmap xt;
+			// xt = hu.getDrawingCache();
+
+			Message ml = new Message();
+			Bundle bl = new Bundle();
+			bl.putInt("xid", xid);
+			bl.putInt("huid", huid);
+			bl.putInt("mid", mid);
+			ml.setData(bl);
+			getximage.sendMessageDelayed(ml, 175);
+
+		}
+	};
+
+	Handler getximage = new Handler() {
+		public void handleMessage(Message msg) {
+			Bundle bdl = msg.getData();
+			final int xid = bdl.getInt("xid");
+			int huid = bdl.getInt("huid");
+			final int mid = bdl.getInt("mid");
+
+			// LinearLayout hu = (LinearLayout) findViewById(huid);
+			ScrollView hu = (ScrollView) findViewById(huid);
+			hu.setDrawingCacheEnabled(true);
+			hu.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+			hu.postInvalidate();
+			Bitmap xt2 = null;
+			xt2 = hu.getDrawingCache();
+
+			Bitmap xt = null;
+			if (xt2 != null) {
+				try {
+					xt = Bitmap.createBitmap(xt2);
+				} catch (OutOfMemoryError em) {
+					xt = null;
+					em.printStackTrace();
+				}
+			}
+
+			ImageView x9 = new ImageView(mCtx);
+			x9.setLayoutParams(new RelativeLayout.LayoutParams(45, 45));
+			x9.setScaleType(ScaleType.FIT_CENTER);
+			// x9.setPadding(90 * ++cdi + 1, 0, 0, 0);
+			x9.setId(hid++);
+
+			x9.setOnClickListener(new OnClickListener() {
+				public void onClick(View gv) {
+					miex(xid, mid, R.id.hu, R.id.cub);
+				}
+			});
+
+			if (xt != null) {
+
+				x9.setImageBitmap(xt);
+				// hu.postInvalidateDelayed(75);
+
+			} else if (xt != null) {
+				FileOutputStream fs = null;
+
+				String filename = "xsaw" + xid + ".png";
+				File filea = new File(Environment.getExternalStorageDirectory()
+						.getAbsolutePath(), "elk/xsaw");
+				filea.mkdirs();
+				File file = new File(filea.getAbsolutePath(), filename);
+
+				try {
+					fs = new FileOutputStream(file);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				// Drawable db =
+				// Drawable.createFromPath(file.getAbsolutePath()+"/"+filename);
+
+				xt.compress(Bitmap.CompressFormat.PNG, 0, fs);
+
+				try {
+					fs.flush();
+				} catch (IOException e1) {
+					Log.e(G, "ComputerStart() 1528 fs.flush() failed");
+					e1.printStackTrace();
+				}
+				try {
+					fs.close();
+				} catch (IOException e1) {
+					Log.e(G, "ComputerStart() 1534 fs.close() failed");
+					e1.printStackTrace();
+				}
+				Drawable u9 = null;
+				try {
+					u9 = Drawable.createFromPath(file.getAbsolutePath());
+					x9.setImageDrawable(u9);
+				} catch (OutOfMemoryError em) {
+					em.printStackTrace();
+					u9 = null;
+				} finally {
+					if (u9 == null) {
+						x9.setImageResource(R.drawable.ld2);
+					}
+				}
+
+			} else {
+				x9.setImageResource(R.drawable.ld2);
+			}
+
+			LinearLayout ldx = (LinearLayout) findViewById(R.id.ldx);
+			ldx.addView(x9, 1);
+
+			// nbs.addView(x9);
+		}
+	};
+
+
+
+
+
+	Handler miesr = new Handler() {
+		public void handleMessage(Message msg) {
+			Bundle bdl = msg.getData();
+			int mid = bdl.getInt("mid");
+			int huid = bdl.getInt("huid");
+			int scub = bdl.getInt("scub");
+			boolean xec = bdl.getBoolean("xec");
+
+			// boolean gs = false;
+			Cursor n8 = null;
+			String rcontent = "";
+			{
+				n8 = SqliteWrapper.query(mCtx, getContentResolver(),
+						Uri.parse("content://com.havenskys.elk/moment"),
+						new String[] { "filtered" }, "_id=" + mid, null, null);
+
+				if (n8 != null) {
+					if (n8.moveToFirst()) {
+						rcontent = n8.getString(0);
+					}
+					n8.close();
+				}
+			}
+
+			if (rcontent.length() == 0) {
+
+				ElkRequest.updateM(11, "Filtering", mid);
+				// Toast.makeText(mCtx, "Filtering", 5643).show();
+
+				bfilter = new Bundle();
+				bfilter.putBoolean("xec", xec);
+				bfilter.putInt("mid", mid);
+				bfilter.putInt("huid", huid);
+				bfilter.putInt("scub", scub);
+
+				{
+					n8 = SqliteWrapper.query(mCtx, getContentResolver(),
+							Uri.parse("content://com.havenskys.elk/moment"),
+							new String[] { "content" }, "_id=" + mid, null,
+							null);
+
+					if (n8 != null) {
+						if (n8.moveToFirst()) {
+							rcontent = n8.getString(0);
+						}
+						n8.close();
+					}
+				}
+
+				rfilter = rcontent;
+				miesr2.sendEmptyMessageDelayed(2, 715);
+
+			} else {
+
+				mie(rcontent, mid, huid, scub, xec, false);
+
+			}
+
+			// gs = true;
+
+			// String rcontent = bx.getString(0);
+
+			/*
+			 * String rcontent2 = ""; try {
+			 * 
+			 * Charset charset = Charset.forName("ISO-8859-1"); CharsetDecoder
+			 * decoder = charset.newDecoder(); ByteBuffer b3 =
+			 * ByteBuffer.wrap(rcontent.getBytes()); CharBuffer c3; c3 =
+			 * decoder.decode(b3); rcontent2 = c3.toString();
+			 * 
+			 * } catch (CharacterCodingException e) { e.printStackTrace(); }//
+			 */
+
+			// if (!gs) {
+			// setr("Contentless");
+			// }
+
+		}
+	};
+
+	String rfilter = "";
+	Handler miesr2 = new Handler() {
+		public void handleMessage(Message msg) {
+			if (rfilter == null) {
+				rfilter = ":)\n<message>Non-content</message>";
+			} else {
+				if (rfilter.length() == 0) {
+					rfilter = ":)\n<message>No Content</message>";
+				}
+			}
+
+			// Log.i(G, ":" + rfilter.replaceAll("[\n \t]", ""));
+
+			rfilter = rfilter.replaceAll(">", ">\n");
+			rfilter = rfilter.replaceAll("-->", "\n-->");
+
+			miesr3.sendEmptyMessageDelayed(2, 15);
+		}
+	};
+	Handler miesr3 = new Handler() {
+		public void handleMessage(Message msg) {
+			rfilter = rfilter.replaceAll("<", "\n<");
+			rfilter = rfilter.replaceAll("&gt;", "&gt;\n");
+
+			miesr4.sendEmptyMessageDelayed(2, 15);
+		}
+	};
+	Handler miesr4 = new Handler() {
+		public void handleMessage(Message msg) {
+			rfilter = rfilter.replaceAll("&lt;", "\n&lt;");
+			// rfilter = rfilter.replaceAll("<[\\/]p>", "");
+
+			miesr5.sendEmptyMessageDelayed(2, 15);
+		}
+	};
+	Handler miesr5 = new Handler() {
+		public void handleMessage(Message msg) {
+			// rfilter = rfilter.replaceAll("<br.*?>", "");
+			int mid = bfilter.getInt("mid");
+			int huid = bfilter.getInt("huid");
+			int scub = bfilter.getInt("scub");
+			boolean xec = bfilter.getBoolean("xec");
+
+			mie(rfilter, mid, huid, scub, xec, true);
+
+		}
+	};
+	Bundle bfilter;
+	Handler miesrx = new Handler() {
+		public void handleMessage(Message msg) {
+			Bundle bdl = msg.getData();
+			int mid = bdl.getInt("mid");
+			int huid = bdl.getInt("huid");
+
+			rfilter = "";
+			LinearLayout x = (LinearLayout) findViewById(huid);
+			for (int x4 = 0; x4 < x.getChildCount(); x4++) {
+
+				TextView b = (TextView) x.getChildAt(x4);
+				if (b.getVisibility() == View.GONE) {
+					continue;
+				}
+				String t = (String) b.getTag();
+				if (t.length() > 0) {
+					rfilter += "<" + t + ">\n";
+				}
+				rfilter += b.getText().toString() + "\n";
+				if (t.length() > 0) {
+					rfilter += "</" + t.replaceAll(" .*", "") + ">\n";
+				}
+			}
+
+			ContentValues hx = new ContentValues();
+			hx.put("title", "Filtered");
+			hx.put("filtered", rfilter);
+			SqliteWrapper.update(mCtx, mCtx.getContentResolver(),
+					Uri.parse("content://com.havenskys.elk/moment"), hx, "_id="
+							+ mid + "", null);
+
+		}
+	};
+
+
+
+
+	public void miex(int xid, int mid, int huid, int scub) {
+
+		boolean gs = false;
+		Cursor bx;
+		bx = SqliteWrapper.query(mCtx, getContentResolver(),
+				Uri.parse("content://com.havenskys.elk/xsaw"),
+				new String[] { "content" }, "_id=" + xid, null, null);
+		if (bx != null) {
+			if (bx.moveToFirst()) {
+				// String rcontent = bx.getString(0);
+				mie(bx.getString(0), mid, huid, scub, false, false);
+
+				gs = true;
+			}
+			bx.close();
+		}
+
+		if (!gs) {
+			setr("Contentless");
+		}
+
+	}
+
+
+
+
+
+

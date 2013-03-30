@@ -1,0 +1,87 @@
+start Mon Dec 10 02:14:32 2012
+Buildfile: /Users/havenskys/Desktop/dull/ELK/build.xml
+
+-set-mode-check:
+
+-set-release-mode:
+
+-release-obfuscation-check:
+
+-setup:
+     [echo] Gathering info for ELK...
+    [setup] Android SDK Tools Revision 15
+    [setup] Project Target: Android 2.3.3
+    [setup] API level: 10
+    [setup] 
+    [setup] ------------------
+    [setup] Resolving library dependencies:
+    [setup] No library dependencies.
+    [setup] 
+    [setup] ------------------
+    [setup] 
+    [setup] WARNING: Attribute minSdkVersion in AndroidManifest.xml (3) is lower than the project target API level (10)
+
+-build-setup:
+     [echo] Creating output directories if needed...
+
+-pre-build:
+
+-code-gen:
+     [echo] ----------
+     [echo] Handling aidl files...
+     [aidl] No aidl files to compile.
+     [echo] ----------
+     [echo] Handling RenderScript files...
+[renderscript] No renderscript files to compile.
+     [echo] ----------
+     [echo] Handling Resources...
+     [aapt] Found new input file
+     [aapt] Generating resource IDs...
+     [aapt]     (skipping file '.DS_Store' due to ANDROID_AAPT_IGNORE pattern '.*')
+
+-pre-compile:
+
+-compile:
+    [javac] /sdk/android-sdk-macosx/tools/ant/build.xml:600: warning: 'includeantruntime' was not set, defaulting to build.sysclasspath=last; set to false for repeatable builds
+    [javac] Compiling 1 source file to /Users/havenskys/Desktop/dull/ELK/bin/classes
+
+-post-compile:
+
+-obfuscate:
+
+-dex:
+      [dex] Found modified input file
+      [dex] Converting compiled files and external libraries into /Users/havenskys/Desktop/dull/ELK/bin/classes.dex...
+
+-crunch:
+   [crunch] Crunching PNG Files in source dir: /Users/havenskys/Desktop/dull/ELK/res
+   [crunch] To destination dir: /Users/havenskys/Desktop/dull/ELK/bin/res
+   [crunch] Crunched 0 PNG files to update cache
+
+-package-resources:
+     [aapt] Found new input file
+     [aapt] Creating full resource package...
+     [aapt]     (skipping file '.DS_Store' due to ANDROID_AAPT_IGNORE pattern '.*')
+
+-package:
+[apkbuilder] Found modified input file
+[apkbuilder] Creating ELK-release-unsigned.apk for release...
+
+-release-prompt-for-password:
+    [input] Please enter keystore password (store:/instream/dcs.keystore):
+    [input] Please enter password for alias 'dcs':
+
+-release-nosign:
+
+release:
+     [echo] Signing final apk...
+  [signjar] Signing JAR: /Users/havenskys/Desktop/dull/ELK/bin/ELK-release-unsigned.apk to /Users/havenskys/Desktop/dull/ELK/bin/ELK-release-unaligned.apk as dcs
+ [zipalign] Running zip align on final apk...
+     [echo] Release Package: /Users/havenskys/Desktop/dull/ELK/bin/ELK-release.apk
+[propertyfile] Updating property file: /Users/havenskys/Desktop/dull/ELK/bin/build.prop
+[propertyfile] Updating property file: /Users/havenskys/Desktop/dull/ELK/bin/build.prop
+[propertyfile] Updating property file: /Users/havenskys/Desktop/dull/ELK/bin/build.prop
+[propertyfile] Updating property file: /Users/havenskys/Desktop/dull/ELK/bin/build.prop
+
+BUILD SUCCESSFUL
+Total time: 23 seconds

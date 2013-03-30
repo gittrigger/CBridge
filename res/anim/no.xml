@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+	android:shareInterpolator="false">
+
+
+	<alpha android:fromAlpha="0.0" android:toAlpha="1.0"
+		android:startOffset="320" android:duration="320" android:fillAfter="false" />
+
+	<translate android:fromXDelta="-100%" android:toXDelta="0"
+		android:fromYDelta="0" android:toYDelta="0" android:fillAfter="false"
+		android:startOffset="0" android:duration="1520" />
+
+	<scale android:fromXScale="1.0" android:toXScale="1.0"
+		android:fromYScale="1.0" android:toYScale="1.0" android:fillAfter="false"
+		android:duration="1320" android:pivotX="0" android:pivotY="50%"
+		android:startOffset="320" />
+
+
+</set>		
